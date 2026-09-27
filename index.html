@@ -83,7 +83,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import * as webllm from "https://esm.run/@mlc-ai/web-llm";
 
 /* ====== 1. PASTE YOUR SUPABASE PROJECT URL AND ANON KEY HERE (Project Settings > API) ====== */
-const SUPABASE_URL='https://ctqcrheuswolrppbvtoj.supabase.co/rest/v1/';
+const SUPABASE_URL='https://ctqcrheuswolrppbvtoj.supabase.co';
 const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN0cWNyaGV1c3dvbHJwcGJ2dG9qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA1MDgxNzIsImV4cCI6MjEwNjA4NDE3Mn0.GMU_q2xm1bavOkZdi5vw11Soq1-21V17ETXBuU9zPeo';
 /* ============================================================================================ */
 
@@ -128,30 +128,34 @@ function liveQuery(table,build,onData,filter){
 }
 
 setInterval(()=>$('#ck').textContent=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}),1000);
+const cleanUrl=(SUPABASE_URL||'').trim().replace(/\/+$/,'');
 if(SUPABASE_URL.startsWith('PASTE')){
- $('#desk').innerHTML='<div class="authwrap"><div class="authcard"><h2>Almost there!</h2><p>Open <b>index.html</b> and paste your Supabase Project URL and anon public key where it says <b>PASTE_YOUR_SUPABASE_URL</b> / <b>PASTE_YOUR_SUPABASE_ANON_KEY</b>.<br><br>Find these in your Supabase project &rarr; <b>Project Settings &rarr; API</b>.<br><br>Also turn <b>off</b> "Confirm email" under <b>Authentication &rarr; Providers &rarr; Email</b> - phone-number logins use made-up email addresses that can never receive a real confirmation email.</p></div></div>';
+ $('#desk').innerHTML='<div class="authwrap"><div class="authcard"><h2>Almost there!</h2><p>Open <b>index.html</b> and paste your Supabase Project URL and anon public key where it says <b>PASTE_YOUR_SUPABASE_URL</b> / <b>PASTE_YOUR_SUPABASE_ANON_KEY</b>.<br><br>Find these in your Supabase project &rarr; <b>Project Settings &rarr; API</b>.<br><br>Also run the schema.sql file (provided separately) once in <b>Supabase &rarr; SQL Editor</b> before testing.</p></div></div>';
+}else if(!/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(cleanUrl)){
+ $('#desk').innerHTML=`<div class="authwrap"><div class="authcard"><h2>Your Supabase URL looks off</h2><p>It should be <b>exactly</b> this shape, with nothing extra before or after it:</p><p class="card" style="font-family:monospace">https://your-project-ref.supabase.co</p><p>No trailing slash, no <code>/rest/v1</code>, no quotes. You currently have:</p><p class="card" style="font-family:monospace;word-break:break-all">${esc(SUPABASE_URL)}</p><p>Fix it in <b>index.html</b> and reload. (This is almost certainly what's causing the "Invalid path specified in request URL" error.)</p></div></div>`;
 }else{
- supabase=createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+ supabase=createClient(cleanUrl,SUPABASE_ANON_KEY.trim());
  boot();
 }
 
-/* ---------- Auth ---------- */
-const toEmail=id=>{id=id.trim().toLowerCase();if(id.includes('@'))return /^\S+@\S+\.\S+$/.test(id)?id:null;const d=id.replace(/\D/g,'');if(d.length<8||d.length>13)return null;return (d.length===8?'968'+d:d)+'@phone.issz.app'};
+/* ---------- Auth: school email only ---------- */
+const SCHOOL_DOMAIN='indianschoolsohar.com';
+const validEmail=id=>{id=(id||'').trim().toLowerCase();return new RegExp(`^[^\\s@]+@${SCHOOL_DOMAIN.replace('.','\\.')}$`).test(id)?id:null};
 const SUPA_MSG={'Invalid login credentials':'Wrong details. New here? Click Sign up.','User already registered':'Account already exists - please sign in.','Password should be at least 6 characters.':'Password needs 6+ characters.'};
 function authView(){
  $('#desk').innerHTML=`<div class="authwrap"><div class="authcard">
  <h2 style="border:0">${mode==='signin'?'Welcome back':'Join ISS Student Zone'}</h2>
  <p class="muted" style="margin:-8px 0 4px">Indian School Sohar student community</p>
  ${mode==='signup'?'<label>Your name</label><input id="nm" maxlength="30"><label>Choose a username (shown to others, letters/numbers/underscore only)</label><input id="un" maxlength="20" placeholder="e.g. aki_2010"><label>Class</label><select id="cl">'+[5,6,7,8,9,10,11,12].map(c=>'<option>Class '+c+'</option>').join('')+'</select>':''}
- <label>Email or phone number</label><input id="id" placeholder="you@mail.com or 9XXXXXXX"><label>Password</label><input id="pw" type="password">
+ <label>School email</label><input id="id" placeholder="you@${SCHOOL_DOMAIN}"><small class="muted">Only ${esc(SCHOOL_DOMAIN)} addresses can register.</small><label>Password</label><input id="pw" type="password">
  <p class="err">${err}</p><button id="go" style="width:100%;margin-top:6px">${mode==='signin'?'Sign In':'Sign Up'}</button>
  <button id="sw" class="btn-ghost" style="width:100%;margin-top:8px">${mode==='signin'?'New here? Sign up':'Have an account? Sign in'}</button>
  </div></div>`;
  $('#sm').innerHTML='';$('#tasks').innerHTML='';$('#on').textContent='';
  $('#sw').onclick=()=>{mode=mode==='signin'?'signup':'signin';err='';authView()};
- $('#go').onclick=async()=>{const e=toEmail($('#id').value),pw=$('#pw').value;
+ $('#go').onclick=async()=>{const e=validEmail($('#id').value),pw=$('#pw').value;
   const bad=m=>{err=m;$('.err').textContent=m};
-  if(!e)return bad('Enter a valid email or phone number (Oman: 8 digits).');
+  if(!e)return bad(`Please use your school email ending in @${SCHOOL_DOMAIN}.`);
   if(pw.length<6)return bad('Password needs 6+ characters.');
   try{
    if(mode==='signup'){
@@ -161,8 +165,7 @@ function authView(){
     const{data:existing,error:checkErr}=await supabase.from('profiles').select('id').eq('username',un).maybeSingle();
     if(checkErr)throw checkErr;
     if(existing)return bad('That username is already taken - try another.');
-    const raw=$('#id').value.trim();const realEmail=raw.includes('@')?raw.toLowerCase():'';
-    sessionStorage.setItem('np',JSON.stringify({n:clean(n),un,c:$('#cl').value,email:realEmail}));
+    sessionStorage.setItem('np',JSON.stringify({n:clean(n),un,c:$('#cl').value,email:e}));
     const{error}=await supabase.auth.signUp({email:e,password:pw});
     if(error)throw error;
    }else{
@@ -171,6 +174,7 @@ function authView(){
    }
   }catch(x){
    if(x.code==='23505')return bad('That username is already taken - try another.');
+   if(/indianschoolsohar/i.test(x.message))return bad(`Only @${SCHOOL_DOMAIN} email addresses can register.`);
    bad(SUPA_MSG[x.message]||x.message||'Something went wrong.')
   }};
 }
