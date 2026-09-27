@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ISS Student Zone - Indian School Sohar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;height:100vh;overflow:hidden;font:14px/1.45 'Inter',system-ui,-apple-system,Segoe UI,sans-serif;color:#1A1D29;
+ background:linear-gradient(rgba(10,14,28,.22),rgba(10,14,28,.22)),url('https://i.pinimg.com/1200x/d1/28/07/d128075c58738f2ade425a5a8edbed1d.jpg') center/cover no-repeat fixed}
+small,.muted{color:#6B7280;font-size:12px}
+#desk{position:fixed;inset:0 0 40px 0;overflow:hidden}
+.authwrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:16px}
+.authcard{max-width:380px;width:100%;background:#fff;border-radius:16px;box-shadow:0 20px 60px rgba(15,23,42,.28);padding:28px}
+label{display:block;font-size:12px;font-weight:600;color:#3A3F55;margin:10px 0 4px}
+.ics{position:absolute;left:6px;top:6px}
+.ic{width:88px;text-align:center;color:#fff;margin:6px 0;cursor:pointer;padding:8px 4px;border-radius:10px;transition:background .15s}
+.ic:hover{background:rgba(255,255,255,.16)}
+.ic b{display:block;font-size:32px;margin-bottom:4px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.4))}
+.ic span{font-size:12px;font-weight:500;text-shadow:0 1px 3px rgba(0,0,0,.7)}
+.win{position:absolute;background:#fff;border:1px solid #E3E5EC;border-radius:12px;display:flex;flex-direction:column;
+ box-shadow:0 10px 34px rgba(15,23,42,.22),0 2px 8px rgba(15,23,42,.08);overflow:hidden}
+.win.mx{left:0!important;top:0!important;width:100%!important;height:100%!important;border-radius:0}
+.tb{background:#2451B8;color:#fff;font-weight:600;font-size:13px;padding:10px 12px;display:flex;align-items:center;gap:8px;
+ cursor:move;touch-action:none;user-select:none;letter-spacing:.2px}
+.tb span{flex:1}
+.tb i{width:22px;height:22px;border-radius:6px;background:rgba(255,255,255,.14);text-align:center;font-style:normal;line-height:22px;cursor:pointer;transition:background .15s}
+.tb i:hover{background:rgba(255,255,255,.3)}
+.tb i:last-child:hover{background:#E24C4C}
+.wb{flex:1;background:#fff;overflow:auto;padding:16px;min-height:0}
+h2{margin:0 0 12px;color:#141826;font-size:17px;font-weight:700;padding-bottom:8px;border-bottom:1px solid #EEF0F5}
+.hero{background:#2451B8;color:#fff;border-radius:10px;padding:14px 16px;margin-bottom:14px;font-weight:600}
+input,select,textarea,button{font:14px 'Inter',system-ui,sans-serif}
+input,select,textarea{border:1px solid #DADDE6;border-radius:8px;padding:8px 10px;width:100%;margin:2px 0;background:#fff;color:#1A1D29}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#2451B8;box-shadow:0 0 0 3px rgba(36,81,184,.15)}
+button{background:#2451B8;color:#fff;border:none;border-radius:8px;padding:9px 16px;font-weight:600;cursor:pointer;margin:2px 0;transition:background .15s}
+button:hover{background:#1d3f99}
+button:disabled{opacity:.5;cursor:not-allowed}
+.btn-ghost{background:transparent;color:#2451B8;border:1px solid #DADDE6}
+.btn-ghost:hover{background:#F5F6FA}
+.card{border:1px solid #E7E9F0;background:#fff;border-radius:10px;padding:12px;margin:10px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.grid .card{margin:0}.grid img{width:100%;height:110px;object-fit:cover;border-radius:6px}
+.price{color:#D1483C;font-weight:700}
+.tag{background:#EEF1FB;color:#2451B8;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:600}
+.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1}.row button{flex:0}
+.rep{margin-left:12px;border-left:2px solid #EEF0F5;padding-left:8px;margin-top:6px}
+a[data-del],a[data-dp]{color:#D1483C;cursor:pointer;font-size:12px}
+.err{color:#D1483C;font-weight:600}
+.msgwrap{height:280px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:10px;background:#FAFBFD;border:1px solid #EEF0F5;border-radius:10px;margin-bottom:8px}
+.bubble{max-width:78%;padding:8px 12px;border-radius:14px;line-height:1.45;font-size:13px;word-wrap:break-word}
+.bubble.me{align-self:flex-end;background:#2451B8;color:#fff;border-bottom-right-radius:4px}
+.bubble.them{align-self:flex-start;background:#F1F2F6;color:#1A1D29;border-bottom-left-radius:4px}
+.bubble .sender{display:block;font-size:11px;font-weight:700;opacity:.65;margin-bottom:2px}
+.typing{display:inline-flex;gap:3px}
+.typing span{width:6px;height:6px;border-radius:50%;background:#9aa0ad;display:inline-block;animation:blink 1.2s infinite}
+.typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+.statusline{padding:10px 12px;background:#F5F6FA;border-radius:8px;font-size:12px;color:#3A3F55;margin-bottom:10px}
+.composer{display:flex;gap:8px;align-items:flex-end}
+.composer textarea{flex:1;resize:none;max-height:120px;overflow-y:auto;border-radius:16px;padding:10px 14px;margin:0}
+.composer button{border-radius:50%;width:38px;height:38px;padding:0;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:15px}
+.tray{position:fixed;left:0;right:0;bottom:0;height:40px;background:#12162A;display:flex;align-items:center;color:#fff;z-index:9999;gap:2px}
+#st{background:#2451B8;border-radius:20px;height:30px;margin:0 8px;padding:0 18px;font-weight:600;font-size:13px}
+#st:hover{background:#1d3f99}
+#tasks{display:flex;flex:1;overflow:hidden;gap:4px}
+.task{background:#1E2340;padding:6px 12px;border-radius:8px;white-space:nowrap;cursor:pointer;max-width:150px;overflow:hidden;color:#B6BBD6;font-size:12px}
+.task.on{background:#2451B8;color:#fff}
+#on,#ck{padding:0 12px;color:#B6BBD6;font-size:12px}
+#bdg{display:none;background:#E24C4C;color:#fff;border-radius:9px;padding:1px 7px;margin-left:2px;font-weight:700;font-size:11px}
+#sm{display:none;position:fixed;left:8px;bottom:48px;width:230px;background:#fff;border:1px solid #E3E5EC;border-radius:12px;
+ box-shadow:0 -8px 30px rgba(15,23,42,.2);z-index:9999;overflow:hidden}
+#sm div{padding:9px 14px;cursor:pointer;font-size:13px}#sm div:hover{background:#EEF1FB;color:#2451B8}
+#sm h5{margin:0;padding:10px 14px;background:#F5F6FA;color:#12162A;font-size:13px;font-weight:700}
+@media(max-width:700px){.win{left:0!important;top:0!important;width:100%!important;height:100%!important;border-radius:0}.tb{cursor:default}#on{display:none}}
+</style></head><body>
+<div id="desk"></div>
+<div id="sm"></div>
+<div class="tray"><button id="st">Start</button><span id="bdg"></span><div id="tasks"></div><span id="on"></span><span id="ck"></span></div>
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import * as webllm from "https://esm.run/@mlc-ai/web-llm";
+
+/* ====== 1. PASTE YOUR SUPABASE PROJECT URL AND ANON KEY HERE (Project Settings > API) ====== */
+const SUPABASE_URL='PASTE_YOUR_SUPABASE_URL';
+const SUPABASE_ANON_KEY='PASTE_YOUR_SUPABASE_ANON_KEY';
+/* ============================================================================================ */
+
+const $=(s,r=document)=>r.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clean=t=>['fuck','shit','bitch','sex'].reduce((s,w)=>s.replace(new RegExp(w,'gi'),'***'),t); // extend this list!
+const okImg=s=>/^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(s||'');
+const D={home:['\u{1F3E0}','Home'],market:['\u{1F6D2}','Marketplace'],chat:['\u{1F4AC}','Chat'],inbox:['\u{1F4EC}','Messages'],exam:['\u{1F4DD}','Exam Talk'],hw:['\u{1F4DA}','Homework Help'],ai:['\u{1F916}','AI Helper']};
+let me=null,mode='signin',err='',online=[],convs=[],cUn=null,W={},act=null,z=10,pUn=null,presenceChannel=null,supabase=null;
+
+/* ---------- AI Helper (WebLLM, runs fully in the student's browser) ---------- */
+const AI_MODEL='Llama-3.2-1B-Instruct-q4f16_1-MLC'; // small & fast; swap for a bigger model if you want smarter (slower) answers
+const AI_SYS="You are a friendly AI helper inside the ISS Student Zone app for students of Indian School Sohar. Help with homework concepts, study tips, explaining topics simply, and general questions. Keep answers short, clear and age-appropriate. If asked about grades, discipline, personal problems, or anything needing a real teacher's judgement, kindly suggest they talk to a teacher or parent instead of answering.";
+let aiEngine=null,aiLoading=null,aiHistory=[];
+async function getAiEngine(onProgress){
+ if(aiEngine)return aiEngine;
+ if(!aiLoading)aiLoading=webllm.CreateMLCEngine(AI_MODEL,{initProgressCallback:onProgress});
+ aiEngine=await aiLoading;return aiEngine;
+}
+
+/* ---------- Small chat-composer helper (used by AI Helper + DMs): auto-grow textarea, Enter to send ---------- */
+function composer(el,{placeholder,onSend}){
+ el.innerHTML=`<div class="composer"><textarea class="cta" rows="1" placeholder="${esc(placeholder)}"></textarea><button class="csend">&#10148;</button></div>`;
+ const ta=$('.cta',el),btn=$('.csend',el);
+ const grow=()=>{ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,120)+'px'};
+ ta.oninput=grow;
+ const fire=()=>{const t=ta.value.trim();if(!t)return;ta.value='';grow();onSend(t)};
+ btn.onclick=fire;
+ ta.onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();fire()}};
+ return{ta,btn,setDisabled:d=>{ta.disabled=d;btn.disabled=d}};
+}
+
+/* ---------- Live query helper: initial fetch + Supabase Realtime refetch-on-change ---------- */
+function liveQuery(table,build,onData,filter){
+ let stopped=false;
+ const load=async()=>{const{data,error}=await build();if(error){console.error(table,error);return}if(!stopped)onData(data||[])};
+ load();
+ const ch=supabase.channel('rt_'+table+'_'+Math.random().toString(36).slice(2))
+  .on('postgres_changes',{event:'*',schema:'public',table,...(filter?{filter}:{})},load)
+  .subscribe();
+ return()=>{stopped=true;supabase.removeChannel(ch)};
+}
+
+setInterval(()=>$('#ck').textContent=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}),1000);
+if(SUPABASE_URL.startsWith('PASTE')){
+ $('#desk').innerHTML='<div class="authwrap"><div class="authcard"><h2>Almost there!</h2><p>Open <b>index.html</b> and paste your Supabase Project URL and anon public key where it says <b>PASTE_YOUR_SUPABASE_URL</b> / <b>PASTE_YOUR_SUPABASE_ANON_KEY</b>.<br><br>Find these in your Supabase project &rarr; <b>Project Settings &rarr; API</b>.<br><br>Also turn <b>off</b> "Confirm email" under <b>Authentication &rarr; Providers &rarr; Email</b> - phone-number logins use made-up email addresses that can never receive a real confirmation email.</p></div></div>';
+}else{
+ supabase=createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+ boot();
+}
+
+/* ---------- Auth ---------- */
+const toEmail=id=>{id=id.trim().toLowerCase();if(id.includes('@'))return /^\S+@\S+\.\S+$/.test(id)?id:null;const d=id.replace(/\D/g,'');if(d.length<8||d.length>13)return null;return (d.length===8?'968'+d:d)+'@phone.issz.app'};
+const SUPA_MSG={'Invalid login credentials':'Wrong details. New here? Click Sign up.','User already registered':'Account already exists - please sign in.','Password should be at least 6 characters.':'Password needs 6+ characters.'};
+function authView(){
+ $('#desk').innerHTML=`<div class="authwrap"><div class="authcard">
+ <h2 style="border:0">${mode==='signin'?'Welcome back':'Join ISS Student Zone'}</h2>
+ <p class="muted" style="margin:-8px 0 4px">Indian School Sohar student community</p>
+ ${mode==='signup'?'<label>Your name</label><input id="nm" maxlength="30"><label>Choose a username (shown to others, letters/numbers/underscore only)</label><input id="un" maxlength="20" placeholder="e.g. aki_2010"><label>Class</label><select id="cl">'+[5,6,7,8,9,10,11,12].map(c=>'<option>Class '+c+'</option>').join('')+'</select>':''}
+ <label>Email or phone number</label><input id="id" placeholder="you@mail.com or 9XXXXXXX"><label>Password</label><input id="pw" type="password">
+ <p class="err">${err}</p><button id="go" style="width:100%;margin-top:6px">${mode==='signin'?'Sign In':'Sign Up'}</button>
+ <button id="sw" class="btn-ghost" style="width:100%;margin-top:8px">${mode==='signin'?'New here? Sign up':'Have an account? Sign in'}</button>
+ </div></div>`;
+ $('#sm').innerHTML='';$('#tasks').innerHTML='';$('#on').textContent='';
+ $('#sw').onclick=()=>{mode=mode==='signin'?'signup':'signin';err='';authView()};
+ $('#go').onclick=async()=>{const e=toEmail($('#id').value),pw=$('#pw').value;
+  const bad=m=>{err=m;$('.err').textContent=m};
+  if(!e)return bad('Enter a valid email or phone number (Oman: 8 digits).');
+  if(pw.length<6)return bad('Password needs 6+ characters.');
+  try{
+   if(mode==='signup'){
+    const n=$('#nm').value.trim();if(!n)return bad('Please enter your name.');
+    const un=$('#un').value.trim().toLowerCase();
+    if(!/^[a-z0-9_]{3,20}$/.test(un))return bad('Username must be 3-20 characters: letters, numbers, underscore only.');
+    const{data:existing,error:checkErr}=await supabase.from('profiles').select('id').eq('username',un).maybeSingle();
+    if(checkErr)throw checkErr;
+    if(existing)return bad('That username is already taken - try another.');
+    const raw=$('#id').value.trim();const realEmail=raw.includes('@')?raw.toLowerCase():'';
+    sessionStorage.setItem('np',JSON.stringify({n:clean(n),un,c:$('#cl').value,email:realEmail}));
+    const{error}=await supabase.auth.signUp({email:e,password:pw});
+    if(error)throw error;
+   }else{
+    const{error}=await supabase.auth.signInWithPassword({email:e,password:pw});
+    if(error)throw error;
+   }
+  }catch(x){
+   if(x.code==='23505')return bad('That username is already taken - try another.');
+   bad(SUPA_MSG[x.message]||x.message||'Something went wrong.')
+  }};
+}
+async function boot(){
+ supabase.auth.onAuthStateChange((_ev,session)=>{handleSession(session)});
+}
+async function handleSession(session){
+ if(!session){me=null;closeAll();authView();return}
+ try{
+  let{data:profile,error}=await supabase.from('profiles').select('*').eq('id',session.user.id).maybeSingle();
+  if(error)throw error;
+  if(!profile){
+   const np=JSON.parse(sessionStorage.getItem('np')||'{}');
+   const ins=await supabase.from('profiles').insert({id:session.user.id,name:np.un||np.n||'Student',real_name:np.n||'',cls:np.c||'',email:np.email||'',role:'student'}).select().single();
+   if(ins.error)throw ins.error;
+   profile=ins.data;
+  }
+  me={uid:session.user.id,...profile};
+  desktop();
+ }catch(e){
+  console.error(e);
+  $('#desk').innerHTML=`<div class="authwrap"><div class="authcard"><h2 style="border:0">Something went wrong</h2><p class="err">${esc(e.message||'Unknown error')}</p><button id="retryBoot" style="width:100%">Try again</button><button id="signOutBtn" class="btn-ghost" style="width:100%;margin-top:8px">Sign out</button></div></div>`;
+  $('#retryBoot').onclick=()=>handleSession(session);
+  $('#signOutBtn').onclick=async()=>{try{await supabase.auth.signOut()}catch(x){}};
+ }
+}
+function closeAll(){Object.keys(W).forEach(closeW);pUn&&pUn();cUn&&cUn();$('#bdg').style.display='none'}
+function isUnread(c){if(!c.lastUid||c.lastUid===me.uid)return false;
+ const seen=Number(localStorage.getItem('dmseen_'+c.id)||0);
+ return (c.lastAtMs||0)>seen}
+function markSeen(cid){localStorage.setItem('dmseen_'+cid,Date.now());updateBadge();if(W.inbox)V.inbox($('.wb',W.inbox.el),W.inbox)}
+function updateBadge(){const n=convs.filter(isUnread).length,b=$('#bdg');if(n){b.style.display='inline';b.textContent=n}else b.style.display='none'}
+
+/* ---------- Desktop + window manager ---------- */
+function desktop(){
+ $('#desk').innerHTML='<div class="ics">'+Object.keys(D).map(k=>`<div class="ic" data-o="${k}"><b>${D[k][0]}</b><span>${D[k][1]}</span></div>`).join('')+'</div>';
+ $('#desk').onclick=e=>{const k=e.target.closest('[data-o]');k&&openWin(k.dataset.o)};
+ $('#sm').innerHTML=`<h5>&#128100; ${esc(me.name)}</h5>`+Object.keys(D).map(k=>`<div data-o="${k}">${D[k][0]} ${D[k][1]}</div>`).join('')+'<div data-out>&#128682; Sign out</div>';
+ $('#sm').onclick=async e=>{const k=e.target.closest('[data-o]');if(k)openWin(k.dataset.o);if(e.target.closest('[data-out]')){try{await supabase.auth.signOut()}catch(x){}}};
+ presenceChannel=supabase.channel('online-users',{config:{presence:{key:me.uid}}});
+ presenceChannel.on('presence',{event:'sync'},()=>{const state=presenceChannel.presenceState();online=Object.values(state).flat();$('#on').textContent='\u{1F7E2} '+online.length+' online'})
+  .subscribe(async status=>{if(status==='SUBSCRIBED')await presenceChannel.track({name:me.name})});
+ pUn=()=>supabase.removeChannel(presenceChannel);
+ cUn=liveQuery('dms',()=>supabase.from('dms').select('*').or(`user1.eq.${me.uid},user2.eq.${me.uid}`).order('last_at',{ascending:false}),
+  rows=>{convs=rows.map(r=>({id:r.id,users:[r.user1,r.user2],names:r.names||{},lastMsg:r.last_msg,lastUid:r.last_uid,lastAtMs:r.last_at?Date.parse(r.last_at):0}));updateBadge();if(W.inbox)V.inbox($('.wb',W.inbox.el),W.inbox)});
+ openWin('home');
+}
+$('#st').onclick=e=>{e.stopPropagation();const m=$('#sm');m.style.display=m.style.display==='block'?'none':'block'};
+document.addEventListener('click',()=>$('#sm').style.display='none');
+$('#tasks').onclick=e=>{const k=e.target.closest('[data-t]')?.dataset.t;if(!k)return;const w=W[k];
+ if(w.el.style.display==='none'||act!==k){w.el.style.display='flex';foc(k)}else{w.el.style.display='none';act=null;bar()}};
+function bar(){$('#tasks').innerHTML=Object.keys(W).map(k=>`<div class="task ${act===k&&W[k].el.style.display!=='none'?'on':''}" data-t="${k}">${W[k].icon} ${W[k].title}</div>`).join('')}
+function foc(k){act=k;W[k].el.style.zIndex=++z;bar()}
+function closeW(k){const w=W[k];if(!w)return;w.un.forEach(f=>f());w.el.remove();delete W[k];if(act===k)act=null;bar()}
+function spawnWindow(k,icon,title,build){
+ if(W[k]){W[k].el.style.display='flex';foc(k);return W[k]}
+ const n=Object.keys(W).length,el=document.createElement('div');el.className='win';
+ el.style.cssText=`left:${100+n*28}px;top:${20+n*28}px;width:min(620px,96vw);height:min(480px,88vh)`;
+ el.innerHTML=`<div class="tb"><span>${icon} ${title}</span><i data-a="m">_</i><i data-a="x2">&#9633;</i><i data-a="x">&#10005;</i></div><div class="wb"></div>`;
+ $('#desk').appendChild(el);const w=W[k]={el,un:[],icon,title},tb=$('.tb',el);
+ el.addEventListener('pointerdown',()=>foc(k));
+ tb.onpointerdown=e=>{if(e.target.dataset.a||innerWidth<700||el.classList.contains('mx'))return;
+  const ox=e.clientX-el.offsetLeft,oy=e.clientY-el.offsetTop;
+  const move=mv=>{el.style.left=Math.max(-300,Math.min(innerWidth-80,mv.clientX-ox))+'px';el.style.top=Math.max(0,Math.min(innerHeight-70,mv.clientY-oy))+'px'};
+  const up=()=>{try{tb.releasePointerCapture(e.pointerId)}catch(x){}tb.removeEventListener('pointermove',move);tb.removeEventListener('pointerup',up);tb.removeEventListener('pointercancel',up)};
+  try{tb.setPointerCapture(e.pointerId)}catch(x){}
+  tb.addEventListener('pointermove',move);tb.addEventListener('pointerup',up);tb.addEventListener('pointercancel',up)};
+ tb.onclick=e=>{const a=e.target.dataset.a;if(a==='m'){el.style.display='none';act=null;bar()}if(a==='x2')el.classList.toggle('mx');if(a==='x')closeW(k)};
+ try{build($('.wb',el),w)}catch(err){$('.wb',el).innerHTML='<p class="err">Something broke loading this window:<br>'+esc(err.message)+'</p><p>Please screenshot this and send it over.</p>';console.error(err)}
+ foc(k);return w;
+}
+function openWin(k){spawnWindow(k,D[k][0],D[k][1],(b,w)=>V[k](b,w,k))}
+function openDM(otherUid,otherName){
+ if(otherUid===me.uid)return alert("That's your own listing!");
+ const cid=[me.uid,otherUid].sort().join('_');markSeen(cid);
+ spawnWindow('dm_'+cid,'\u{1F48C}','Chat: '+otherName,(b,w)=>renderDM(b,w,cid,otherUid,otherName));
+}
+function keep(b,f){const s={};b.querySelectorAll('[data-k]').forEach(e=>s[e.dataset.k]=e.value);const a=document.activeElement?.dataset?.k;f();
+ b.querySelectorAll('[data-k]').forEach(e=>{if(s[e.dataset.k]!=null)e.value=s[e.dataset.k]});if(a)b.querySelector(`[data-k="${a}"]`)?.focus()}
+const isAdmin=()=>me.role==='admin';
+
+/* ---------- Window contents ---------- */
+const V={};
+V.home=b=>{b.innerHTML=`<div class="hero">Welcome ${esc(me.name)}! Buy, sell, chat and study together.</div><h2>Welcome to ISS Student Zone!</h2>
+<p>Click the icons on the left (or the Start menu) to open windows. Drag them around by the title bar!</p>
+<div class="card"><b>&#128722; Marketplace</b> - sell old books, uniforms and gadgets with a photo.<br><b>&#128172; Chat</b> - post messages and reply to each other.<br><b>&#128221; Exam Talk</b> - tips and doubts.<br><b>&#128218; Homework Help</b> - ask and answer.<br><b>&#129302; AI Helper</b> - ask an AI study buddy anything, right in your browser.</div>
+<p>&#128679; <b>Be kind &amp; be safe:</b> no bullying, never share your address or password, and do swaps only at school.</p>`};
+
+V.market=(b,w)=>{
+ b.innerHTML=`<h2>Student Marketplace</h2><div class="card"><b>&#128247; Sell something</b><input class="t" maxlength="80" placeholder="What are you selling?">
+ <div class="row"><input class="p" type="number" min="0" step="0.1" placeholder="Price (OMR)"><input class="f" type="file" accept="image/*"></div>
+ <textarea class="d" rows="2" maxlength="300" placeholder="Condition, class, details..."></textarea><button class="sell">Post item</button> <span class="pv"></span></div><div class="grid list"></div>`;
+ const q=s=>$(s,b);
+ let photo='';
+ q('.f').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=x=>{const i=new Image();i.onload=()=>{const s=Math.min(1,360/i.width),c=document.createElement('canvas');c.width=i.width*s;c.height=i.height*s;c.getContext('2d').drawImage(i,0,0,c.width,c.height);photo=c.toDataURL('image/jpeg',.6);q('.pv').textContent='Photo ready \u2714'};i.src=x.target.result};r.readAsDataURL(f)};
+ q('.sell').onclick=async()=>{const t=clean(q('.t').value.trim());if(!t)return alert('Add a title!');
+  try{const{error}=await supabase.from('items').insert({t,p:q('.p').value.slice(0,8),d:clean(q('.d').value.trim()),img:photo,uid:me.uid,u:me.name,c:me.cls||'',email:me.email||'',interested:[]});
+   if(error)throw error;
+   photo='';['.t','.p','.d','.f'].forEach(s=>q(s).value='');q('.pv').textContent=''}catch(e){alert('Could not post: '+e.message)}};
+ q('.list').onclick=e=>{const d=e.target.dataset;
+  if(d.dm)openDM(d.dm,d.dmn);
+  if(d.wish)toggleWish(d.wish);
+  if(d.del&&confirm('Remove this item?'))supabase.from('items').delete().eq('id',d.del)};
+ w.un.push(liveQuery('items',()=>supabase.from('items').select('*').order('created_at',{ascending:false}).limit(60),
+  items=>{q('.list').innerHTML=items.map(x=>{const mine=x.uid===me.uid,ppl=x.interested||[],have=ppl.includes(me.uid);
+   const mail=x.email?`<a href="mailto:${esc(x.email)}?subject=${encodeURIComponent('About: '+x.t)}&body=${encodeURIComponent('Hi '+x.u+', I saw your listing "'+x.t+'" on ISS Student Zone and I\'m interested!')}">&#9993; Email</a>`:'';
+   return `<div class="card">${okImg(x.img)?`<img src="${x.img}">`:''}<b>${esc(x.t)}</b><div class="price">OMR ${esc(x.p||'?')}</div><small>${esc(x.d)}</small><br><span class="tag">${esc(x.u)} ${esc(x.c)}</span><br>
+   ${mine?`<small>&#128276; ${ppl.length} interested</small>`:`<button data-dm="${x.uid}" data-dmn="${esc(x.u)}">&#128172; DM seller</button> ${mail} <button data-wish="${x.id}">&#128276; ${have?'Interested':'Interested?'} (${ppl.length})</button>`}
+   ${mine||isAdmin()?`<button data-del="${x.id}">Remove</button>`:''}</div>`}).join('')||'<p>Nothing yet - be the first to sell!</p>'}));
+};
+async function toggleWish(id){try{const{error}=await supabase.rpc('toggle_interest',{item_id:id,user_id:me.uid});if(error)throw error}catch(e){alert('Could not update: '+e.message)}}
+
+function renderPostBoard(b,w,bid,withSubject){
+ b.innerHTML=`<h2>${bid==='chat'?'Chat':bid==='exam'?'Exam Discussion':'Homework Help'}</h2><div class="card"><b>${bid==='chat'?'Say something to everyone':bid==='exam'?'Share a tip or ask a doubt':'Ask a homework question'}</b>
+ ${withSubject?`<select class="sb">${['Maths','Science','English','Hindi','Malayalam','Social','Computer','Other'].map(s=>`<option>${s}</option>`).join('')}</select>`:''}
+ <textarea class="tx" rows="2" maxlength="800" placeholder="Type here..."></textarea><button class="post">Post</button></div><div class="list"></div>`;
+ const q=s=>$(s,b);
+ q('.post').onclick=async()=>{const t=clean(q('.tx').value.trim());if(!t)return;
+  try{const{error}=await supabase.from('posts').insert({board:bid,uid:me.uid,u:me.name,c:me.cls||'',s:withSubject?q('.sb').value:'',t,replies:[]});
+   if(error)throw error;q('.tx').value=''}catch(e){alert('Could not post: '+e.message)}};
+ q('.list').onclick=async e=>{const d=e.target.dataset;
+  if(d.dp&&confirm('Delete this post?'))supabase.from('posts').delete().eq('id',d.dp);
+  if(d.rp){const i=q(`[data-k="r${d.rp}"]`),t=clean(i.value.trim());if(!t)return;i.value='';
+   try{const{error}=await supabase.rpc('add_reply',{post_id:d.rp,reply:{u:me.name,t}});if(error)throw error}catch(x){alert('Could not reply: '+x.message)}}};
+ w.un.push(liveQuery('posts',()=>supabase.from('posts').select('*').eq('board',bid).order('created_at',{ascending:false}).limit(60),
+  posts=>keep(b,()=>{q('.list').innerHTML=posts.map(x=>`<div class="card">${x.s?`<span class="tag">${esc(x.s)}</span> `:''}<b>${esc(x.u)}</b> <small>${esc(x.c)}</small> ${x.uid===me.uid||isAdmin()?`<a data-dp="${x.id}">[delete]</a>`:''}<p>${esc(x.t)}</p>
+  ${(x.replies||[]).map(r=>`<div class="rep"><b>${esc(r.u)}:</b> ${esc(r.t)}</div>`).join('')}<div class="row"><input data-k="r${x.id}" maxlength="400" placeholder="Reply..."><button data-rp="${x.id}">Reply</button></div></div>`).join('')||'<p>No posts yet. Say hi!</p>'}), `board=eq.${bid}`));
+}
+V.chat=(b,w)=>renderPostBoard(b,w,'chat',false);
+V.exam=(b,w)=>renderPostBoard(b,w,'exam',true);
+V.hw=(b,w)=>renderPostBoard(b,w,'hw',true);
+
+function renderDM(b,w,convId,otherUid,otherName){
+ b.innerHTML=`<div class="msgwrap" id="dmMsgs"></div><div id="dmComposerHost"></div><small>Only you two can see this.</small>`;
+ const q=s=>$(s,b),msgsEl=q('#dmMsgs'),lo=me.uid<otherUid?me.uid:otherUid,hi=me.uid<otherUid?otherUid:me.uid;
+ supabase.from('dms').upsert({id:convId,user1:lo,user2:hi,names:{[me.uid]:me.name,[otherUid]:otherName}}).then(({error})=>{if(error)console.error(error)});
+ w.un.push(liveQuery('dm_messages',()=>supabase.from('dm_messages').select('*').eq('dm_id',convId).order('created_at',{ascending:true}).limit(80),
+  msgs=>{msgsEl.innerHTML=msgs.map(x=>`<div class="bubble ${x.uid===me.uid?'me':'them'}">${x.uid===me.uid?'':`<span class="sender">${esc(x.u)}</span>`}${esc(x.m)}</div>`).join('')||'<p class="muted">No messages yet. Say hi!</p>';
+   msgsEl.scrollTop=msgsEl.scrollHeight;markSeen(convId)}, `dm_id=eq.${convId}`));
+ composer(q('#dmComposerHost'),{placeholder:'Type a message...',onSend:async t=>{
+  try{const{error}=await supabase.from('dm_messages').insert({dm_id:convId,uid:me.uid,u:me.name,m:t});if(error)throw error;
+   await supabase.from('dms').update({last_msg:t,last_uid:me.uid,last_at:new Date().toISOString()}).eq('id',convId)}
+  catch(e){alert('Could not send: '+e.message)}}});
+}
+V.inbox=(b)=>{
+ b.innerHTML=`<h2>Messages</h2><div class="list"></div>`;
+ const q=s=>$(s,b),sorted=[...convs].sort((a,c)=>(c.lastAtMs||0)-(a.lastAtMs||0));
+ q('.list').innerHTML=sorted.filter(c=>c.lastMsg).map(c=>{const ou=c.users.find(u=>u!==me.uid),nm=(c.names&&c.names[ou])||'Someone',un=isUnread(c);
+  return `<div class="card" data-open="${ou}" data-nm="${esc(nm)}" style="cursor:pointer;${un?'border-color:#2451B8':''}">${un?'&#128276; ':''}<b>${esc(nm)}</b>${un?' <span class="tag">new</span>':''}<br><small>${esc((c.lastMsg||'').slice(0,60))}</small></div>`}).join('')||'<p>No conversations yet. DM a seller from the Marketplace!</p>';
+ q('.list').onclick=e=>{const d=e.target.closest('[data-open]')?.dataset;d&&openDM(d.open,d.nm)};
+};
+
+/* ---------- AI Helper: chat-bubble UI like the rest of the app's chatrooms ---------- */
+V.ai=(b)=>{
+ b.innerHTML=`<div class="msgwrap" id="aiMsgs"></div><div class="statusline" id="aiStatus">Getting ready...</div><div id="aiComposerHost"></div>
+ <small>&#9888;&#65039; Answers can be wrong - always double-check with a teacher or textbook. First load downloads ~1GB (then it's cached). Needs Chrome or Edge on a computer, or a newer phone.</small>`;
+ const q=s=>$(s,b),msgsEl=q('#aiMsgs'),statusEl=q('#aiStatus');
+ const bubble=(who,text)=>{const d=document.createElement('div');d.className='bubble '+(who==='You'?'me':'them');
+  d.innerHTML=(who==='You'?'':'<span class="sender">AI Helper</span>')+esc(text);msgsEl.appendChild(d);msgsEl.scrollTop=msgsEl.scrollHeight;return d};
+ const typingBubble=()=>{const d=document.createElement('div');d.className='bubble them';d.innerHTML='<span class="typing"><span></span><span></span><span></span></span>';msgsEl.appendChild(d);msgsEl.scrollTop=msgsEl.scrollHeight;return d};
+ if(!navigator.gpu){statusEl.innerHTML='<span class="err">This AI needs WebGPU, which your browser/device doesn\'t support. Try the newest Chrome or Edge on a computer, or a newer Android phone.</span>';return}
+ const ui=composer(q('#aiComposerHost'),{placeholder:'Ask me anything about school...',onSend:send});
+ ui.setDisabled(true);
+ const boot=async()=>{
+  statusEl.style.display='block';statusEl.textContent='Starting up...';ui.setDisabled(true);
+  try{
+   await getAiEngine(p=>{statusEl.textContent='Loading AI model... '+Math.round((p.progress||0)*100)+'% (only needed the first time)'});
+   statusEl.style.display='none';ui.setDisabled(false);
+   if(!aiHistory.length)bubble('AI',"Hi! I'm your AI study helper. Ask me about homework, exam prep, or anything school-related!");
+   else aiHistory.forEach(m=>bubble(m.role==='user'?'You':'AI',m.content));
+  }catch(e){statusEl.innerHTML='<span class="err">Could not load AI: '+esc(e.message)+'</span> <button id="aiRetry">Try again</button>';q('#aiRetry').onclick=boot}
+ };
+ boot();
+ let busy=false;
+ async function send(t){
+  if(busy||!aiEngine)return;
+  bubble('You',t);aiHistory.push({role:'user',content:t});
+  busy=true;ui.setDisabled(true);const tb=typingBubble();
+  try{
+   const stream=await aiEngine.chat.completions.create({messages:[{role:'system',content:AI_SYS},...aiHistory.slice(-12)],stream:true,temperature:0.7});
+   let full='';
+   for await(const chunk of stream){full+=chunk.choices[0]?.delta?.content||'';
+    tb.innerHTML='<span class="sender">AI Helper</span>'+esc(full);msgsEl.scrollTop=msgsEl.scrollHeight}
+   aiHistory.push({role:'assistant',content:full});
+  }catch(e){tb.innerHTML='<span class="sender">AI Helper</span><span class="err">Sorry, something went wrong: '+esc(e.message)+'</span>'}
+  busy=false;ui.setDisabled(false);
+ }
+};
+</script></body></html>
